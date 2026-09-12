@@ -1,0 +1,66 @@
+import {ArrayList} from "@std/arraylist/comptime";
+import {till} from "@std/range";
+import {log} from "@std/index";
+
+fn _getStackTrace(): StackTrace native "getStackTrace";
+
+pub class StackTrace {
+	elms: ArrayList<StackTraceElm>;
+
+	pub StackTrace(elms: ArrayList<StackTraceElm>) {
+		this.elms = elms;
+	}
+
+	static fn get() {
+		let trace = _getStackTrace();
+		trace.pop(); //remove this method call
+		return trace;
+	}
+
+	fn print() {
+		if (this.elms.len() >= 1) {
+			log("    at " + this.getMsgFor(this.elms.get(this.elms.len() - 1)));
+		}
+		if (this.elms.len() >= 2) {
+			for (let i in till(this.elms.len() - 1).reversedIterable()) {
+				log("    at " + this.getMsgFor(this.elms.get(i)));
+			}
+		}
+	}
+
+	fn getMsgFor(elm: StackTraceElm) {
+		if (elm.getFnName() == "") {
+			return elm.getFile() + ":" + elm.getLine();
+		}
+
+		return elm.getFnName() + "(" + elm.getFile() + ":" + elm.getLine() + ")";
+	}
+
+	fn pop() {
+		this.elms.pop();
+	}
+}
+
+pub class StackTraceElm {
+	fnName: str;
+	file: str;
+	line: int;
+
+	pub StackTraceElm(fnName: str, file: str, line: int) {
+		this.fnName = fnName;
+		this.file = file;
+		this.line = line;
+	}
+
+	pub fn getFnName() {
+		return this.fnName;
+	}
+
+	pub fn getFile() {
+		return this.file;
+	}
+
+	pub fn getLine() {
+		return this.line;
+	}
+}

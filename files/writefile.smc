@@ -1,0 +1,5 @@
+fn _writeToPack(file: str, contents: str, overwrite: bool): null native "writeToPack";
+
+pub fn writeToPack(file: str, contents: str, overwrite: bool) {
+	_writeToPack(file, contents, overwrite);
+}

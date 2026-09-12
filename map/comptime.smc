@@ -1,0 +1,96 @@
+import {ArrayList} from "@std/arraylist/comptime";
+import {Pair} from "@std/pair";
+
+//TODO: hash for perf?
+pub class Map<K, V> {
+	keys: ArrayList<K>;
+	values: ArrayList<V>;
+
+	pub Map() {
+		this.keys = new ArrayList<K>();
+		this.values = new ArrayList<V>();
+	}
+
+	static pub fn copyOf<K, V>(other: Map<K, V>) {
+		let copy = new Map<K, V>();
+		for (let entry in other) {
+			copy.put(entry.getLeft(), entry.getRight());
+		}
+		return copy;
+	}
+
+	pub fn get(key: K) {
+		for (let entry in this) {
+			if (entry.getLeft() == key) {
+				return entry.getRight();
+			}
+		}
+	}
+
+	pub fn put(key: K, value: V) {
+		if (this.hasKey(key)) {
+			this.remove(key);
+		}
+		this.keys.push(key);
+		this.values.push(value);
+	}
+
+	pub fn remove(key: K) {
+		let index = 0;
+		for (let key2 in this.keys) {
+			if (key == key2) {
+				this.keys.remove(index);
+				this.values.remove(index);
+				return;
+			}
+			index += 1;
+		}
+	}
+
+	pub fn hasKey(key: K) {
+		for (let key2 in this.keys) {
+			if (key == key2) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	pub fn getKeys() {
+		return this.keys;
+	}
+
+	pub fn getValues() {
+		return this.values;
+	}
+
+	pub fn size() {
+		return this.keys.len();
+	}
+
+	pub fn iterator() {
+		return new MapIterator<K, V>(this.keys, this.values);
+	}
+}
+
+class MapIterator<K, V> {
+	keys: ArrayList<K>;
+	values: ArrayList<V>;
+	index: int;
+
+	pub MapIterator(keys: ArrayList<K>, values: ArrayList<V>) {
+		this.keys = keys;
+		this.values = values;
+		this.index = 0;
+	}
+
+	pub fn hasNext() {
+		return this.index < this.keys.len();
+	}
+
+	pub fn next() {
+		let result = new Pair<K, V>(this.keys.get(this.index), this.values.get(this.index));
+		this.index += 1;
+		return result;
+	}
+}

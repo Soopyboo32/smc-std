@@ -1,0 +1,20 @@
+import {Nbt, NbtCompoundBuilder} from "@std/nbt";
+
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+pub fn summon(entity: str) {
+	_rawCmd("summon " + entity);
+}
+
+pub fn summonCoords(entity: str, x: str, y: str, z: str) {
+	_rawCmd("summon " + entity + " " + x + " " + y + " " + z);
+}
+
+pub fn summonNbt(entity: str, nbt: fn(builder: NbtCompoundBuilder)) {
+	summonNbtCoords(entity, "~", "~", "~", nbt);
+}
+
+pub fn summonNbtCoords(entity: str, x: str, y: str, z: str, nbt: fn(builder: NbtCompoundBuilder)) {
+	let nbtC = Nbt.compound(nbt);
+	_rawCmd("summon " + entity + " " + x + " " + y + " " + z + " " + nbtC.toNbtStr());
+}

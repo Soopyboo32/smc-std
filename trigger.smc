@@ -1,0 +1,16 @@
+import {ScoreboardObjective} from "@std/scoreboard";
+import {onTick, executeAs} from "@std/index";
+
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+pub fn trigger(name: str, cb: fn) {
+	let objective = new ScoreboardObjective(name, "trigger");
+
+	onTick {
+		_rawCmd("scoreboard players enable @a " + name);
+		executeAs("@a[scores={" + name + "=1..}]") {
+			objective.getVar("@s").set(0);
+			cb();
+		};
+	};
+}

@@ -1,0 +1,4 @@
+fn _getQuote(): str native "getQuote";
+
+//TODO: allow escaping these instead of getting from native xdd
+pub let QUOTE = _getQuote();

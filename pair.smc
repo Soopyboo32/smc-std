@@ -1,0 +1,21 @@
+pub class Pair<L, R> {
+	left: L;
+	right: R;
+
+	pub Pair(left: L, right: R) {
+		this.left = left;
+		this.right = right;
+	}
+
+	pub fn getLeft() {
+		return this.left;
+	}
+
+	pub fn getRight() {
+		return this.right;
+	}
+
+	pub fn debugStringify() {
+		return "Pair(" + this.left + ", " + this.right + ")";
+	}
+}

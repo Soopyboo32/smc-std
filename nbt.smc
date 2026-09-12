@@ -1,0 +1,243 @@
+import {ArrayList} from "@std/arraylist/comptime";
+import {Map} from "@std/map/comptime";
+import {QUOTE} from "@std/quote";
+
+//TODO: interface
+pub class Nbt {
+	static pub fn i32(val: int) {
+		return new NbtI32(val);
+	}
+
+	static pub fn f32(val: float) {
+		return new NbtF32(val);
+	}
+
+	static pub fn boolean(val: bool) {
+		return new NbtBoolean(val);
+	}
+
+	static pub fn string(val: str) {
+		return new NbtString(val);
+	}
+
+	static pub fn compound(inner: fn (builder: NbtCompoundBuilder)) {
+		let nbtCompound = new NbtCompound();
+		inner(new NbtCompoundBuilder(nbtCompound));
+		return nbtCompound;
+	}
+
+	static pub fn list(inner: fn (builder: NbtListBuilder)) {
+		let nbtList = new NbtList();
+		inner(new NbtListBuilder(nbtList));
+		return nbtList;
+	}
+}
+
+//TODO: implement Nbt
+pub class NbtI32 {
+	val: int;
+
+	pub NbtI32(val: int) {
+		this.val = val;
+	}
+
+	pub fn toNbtStr() {
+		return this.val + "";
+	}
+
+	pub fn toJsonStr() {
+		return this.val + "";
+	}
+}
+
+pub class NbtF32 {
+	val: float;
+
+	pub NbtF32(val: float) {
+		this.val = val;
+	}
+
+	pub fn toNbtStr() {
+		return this.val + "f";
+	}
+
+	pub fn toJsonStr() {
+		return this.val + "";
+	}
+}
+
+pub class NbtBoolean {
+	val: bool;
+
+	pub NbtBoolean(val: bool) {
+		this.val = val;
+	}
+
+	pub fn toNbtStr() {
+		return this.val + "";
+	}
+
+	pub fn toJsonStr() {
+		return this.val + "";
+	}
+}
+
+pub class NbtString {
+	val: str;
+
+	pub NbtString(val: str) {
+		this.val = val;
+	}
+
+	pub fn toNbtStr() {
+		return QUOTE + this.val + QUOTE;
+	}
+
+	pub fn getValue() {
+		return this.val;
+	}
+
+	pub fn toJsonStr() {
+		return QUOTE + this.val + QUOTE;
+	}
+}
+
+pub class NbtCompound {
+	val: Map<str, any>;
+
+	pub NbtCompound() {
+		this.val = new Map<str, any>();
+	}
+
+	pub fn put(key: str, val: any) {
+		this.val.put(key, val);
+	}
+
+	pub fn toNbtStr() {
+		let res = "{";
+		let hasPrev = false;
+		for (let elm in this.val) {
+			if (hasPrev) {
+				res += ",";
+			}
+			res += QUOTE + elm.getLeft() + QUOTE + ":" + elm.getRight().toNbtStr();
+			hasPrev = true;
+		}
+		return res + "}";
+	}
+
+	pub fn toJsonStr() {
+		let res = "{";
+		let hasPrev = false;
+		for (let elm in this.val) {
+			if (hasPrev) {
+				res += ",";
+			}
+			res += QUOTE + elm.getLeft() + QUOTE + ":" + elm.getRight().toJsonStr();
+			hasPrev = true;
+		}
+		return res + "}";
+	}
+}
+
+pub class NbtCompoundBuilder {
+	compoundI: NbtCompound;
+
+	pub NbtCompoundBuilder(compound: NbtCompound) {
+		this.compoundI = compound;
+	}
+
+	pub fn string(key: str, value: str) {
+		this.compoundI.put(key, Nbt.string(value));
+	}
+
+	pub fn i32(key: str, value: int) {
+		this.compoundI.put(key, Nbt.i32(value));
+	}
+
+	pub fn f32(key: str, value: float) {
+		this.compoundI.put(key, Nbt.f32(value));
+	}
+
+	pub fn boolean(key: str, value: bool) {
+		this.compoundI.put(key, Nbt.boolean(value));
+	}
+
+	pub fn compound(key: str, inner: fn (builder: NbtCompoundBuilder)) {
+		this.compoundI.put(key, Nbt.compound(inner));
+	}
+
+	pub fn list(key: str, inner: fn (builder: NbtListBuilder)) {
+		this.compoundI.put(key, Nbt.list(inner));
+	}
+
+	pub fn nbt(key: str, val: any) {
+		this.compoundI.put(key, val);
+	}
+}
+
+pub class NbtList {
+	array: ArrayList<any>;
+
+	pub NbtList() {
+		this.array = new ArrayList<any>();
+	}
+
+	pub fn push(val: any) {
+		this.array.push(val);
+	}
+
+	pub fn toNbtStr() {
+		let res = "[";
+		let hasPrev = false;
+		for (let elm in this.array) {
+			if (hasPrev) {
+				res += ",";
+			}
+			res += elm.toNbtStr();
+			hasPrev = true;
+		}
+		return res + "]";
+	}
+
+	pub fn toJsonStr() {
+		let res = "[";
+		let hasPrev = false;
+		for (let elm in this.array) {
+			if (hasPrev) {
+				res += ",";
+			}
+			res += elm.toJsonStr();
+			hasPrev = true;
+		}
+		return res + "]";
+	}
+}
+
+pub class NbtListBuilder {
+	listI: NbtList;
+
+	pub NbtListBuilder(list: NbtList) {
+		this.listI = list;
+	}
+
+	fn i32(val: int) {
+		this.listI.push(Nbt.i32(val));
+	}
+
+	fn f32(val: float) {
+		this.listI.push(Nbt.f32(val));
+	}
+
+	fn boolean(val: bool) {
+		this.listI.push(Nbt.boolean(val));
+	}
+
+	fn string(val: str) {
+		this.listI.push(Nbt.string(val));
+	}
+
+	fn compound(inner: fn (builder: NbtCompoundBuilder)) {
+		this.listI.push(Nbt.compound(inner));
+	}
+}

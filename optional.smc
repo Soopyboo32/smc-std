@@ -1,0 +1,50 @@
+import {ArrayList} from "@std/arraylist/comptime";
+import {panic} from "@std/panic";
+
+pub class Optional<T> {
+	list: ArrayList<T>;
+
+	Optional() {
+		this.list = new ArrayList<T>();
+	}
+
+	static fn of<T>(val: T): Optional<T> {
+		let opt = new Optional<T>();
+		opt.set(val);
+		return opt;
+	}
+
+	static fn empty<T>(): Optional<T> {
+		return new Optional<T>();
+	}
+
+	pub fn isEmpty() {
+		return this.list.isEmpty();
+	}
+
+	pub fn isPresent() {
+		return !this.isEmpty();
+	}
+
+	pub fn set(val: any) {
+		this.clear();
+		this.list.push(val);
+	}
+
+	pub fn get() {
+		if (this.isEmpty()) panic("Trying to get the value of an empty optional");
+		return this.list.get(0);
+	}
+
+	pub fn clear() {
+		if (this.isPresent()) {
+			this.list.pop();
+		}
+	}
+
+	pub fn ifPresent(fun: fn) {
+		if (this.isPresent()) {
+			fun();
+		}
+	}
+}

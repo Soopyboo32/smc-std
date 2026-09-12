@@ -1,0 +1,57 @@
+import {Storage} from "@std/storage";
+
+fn _rawCmdMacro(cmd: str, storage: str): $int native "rawCmdMacro";
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+let tempStorage = new Storage();
+
+//todo: generic type or smth?
+//not sure how to handle all the diff varients
+pub class ArrayList_rint {
+	storage: Storage;
+	$length: $int;
+
+	pub ArrayList_rint() {
+		this.storage = new Storage();
+		this.$length = 0;
+		this.storage.set("c", "[]");
+	}
+
+	pub fn getFirst(){
+		return _rawCmd("data get storage " + this.storage.getName() + " c[0]");
+	}
+
+	pub fn removeFirst(){
+		this.$length -= 1;
+		_rawCmd("data remove storage " + this.storage.getName() + " c[0]");
+	}
+
+	pub fn get(index: $int){
+		tempStorage.putInt("index", index);
+		let $res = _rawCmdMacro("data get storage " + this.storage.getName() + " c[$(index)]", tempStorage.getName());
+		tempStorage.remove("index");
+		return $res;
+	}
+
+	pub fn push(value: $int) {
+		tempStorage.putInt("value", value);
+		_rawCmdMacro("data modify storage " + this.storage.getName() + " c append value $(value)i", tempStorage.getName());
+		tempStorage.remove("value");
+		this.$length += 1;
+	}
+
+	pub fn removeAt(index: $int) {
+		tempStorage.putInt("index", index);
+		_rawCmdMacro("data remove storage " + this.storage.getName() + " c[$(index)]", tempStorage.getName());
+		tempStorage.remove("index");
+		this.$length -= 1;
+	}
+
+	pub fn len(){
+		return this.$length;
+	}
+
+	pub fn isEmpty() {
+		return this.$length == 0;
+	}
+}

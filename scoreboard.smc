@@ -1,0 +1,59 @@
+fn _scoreboardVarSet(objective: str, name: str, val: $int): null native "scoreboardVarSet";
+fn _scoreboardVarGet(objective: str, name: str): $int native "scoreboardVarGet";
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+pub class ScoreboardObjective {
+	name: str;
+
+	pub ScoreboardObjective(name: str, type: str) {
+		this.name = name;
+		_rawCmd("scoreboard objectives add " + name + " " + type);
+	}
+
+	pub fn getName() {
+		return this.name;
+	}
+
+	pub fn getVar(name: str) {
+		return new ScoreboardVariable(this, name);
+	}
+}
+
+pub class ScoreboardVariable {
+	objective: ScoreboardObjective;
+	name: str;
+
+	pub ScoreboardVariable(objective: ScoreboardObjective, name: str) {
+		this.objective = objective;
+		this.name = name;
+	}
+
+	pub fn reference() {
+		return this.objective.getName() + " " + this.name;
+	}
+
+	pub fn getName() {
+		return this.name;
+	}
+
+	pub fn getObjective() {
+		return this.objective;
+	}
+
+	pub fn set(value: $int) {
+		_scoreboardVarSet(this.objective.getName(), this.name, value);
+	}
+
+	pub fn get() {
+		return _scoreboardVarGet(this.objective.getName(), this.name);
+	}
+}
+
+let tmpObjective = new ScoreboardObjective("_tmp", "dummy");
+let varId = 0;
+
+pub fn getTmpVariable() {
+	let id = varId;
+	varId += 1;
+	return tmpObjective.getVar("$" + id);
+}

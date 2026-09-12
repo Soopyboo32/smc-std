@@ -1,0 +1,14 @@
+import {panic} from "@std/panic";
+
+pub class EmptyIterator {
+	pub EmptyIterator() {
+	}
+
+	pub fn hasNext() {
+		return false;
+	}
+
+	pub fn next() {
+		panic("There is no next element in EmptyIterator");
+	}
+}

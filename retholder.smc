@@ -1,0 +1,51 @@
+import {Map} from "@std/map/comptime";
+
+fn _allowUnsafeWrites(inner: fn): null native "allowUnsafeWrites";
+
+pub class RetHolder<T> {
+	returns: Map<int, T>;
+	$value: $int;
+
+	pub RetHolder() {
+		this.$value = -1;
+		this.returns = new Map<int, T>();
+	}
+
+	static pub fn of<T>(val: T) {
+		let holder = new RetHolder<T>();
+		holder.setReturn(val);
+		return holder;
+	}
+
+	pub fn setReturn(val: T) {
+		let id = returns.size();
+		_allowUnsafeWrites {
+			this.returns.put(id, val);
+		};
+		this.$value = id;
+	}
+
+	pub fn hasReturned() {
+		return this.$value != -1;
+	}
+
+	pub fn with(cb: fn (value: T)) {
+		//TODO: switch for more perf?
+		for (let pair in this.returns) {
+			if (this.$value == pair.getLeft()) {
+				cb(pair.getRight());
+			}
+		}
+	}
+
+	pub fn map<V>(cb: fn (value: T): V) {
+		let ret = new RetHolder<V>();
+
+		for (let pair in this.returns) {
+			ret.returns.put(pair.getLeft(), cb(pair.getRight()));
+		}
+		ret.$value = this.$value;
+
+		return ret;
+	}
+}

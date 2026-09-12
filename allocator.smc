@@ -1,0 +1,59 @@
+import {Storage} from "@std/storage";
+import {ArrayList_rint} from "@std/arraylist/runtime";
+
+fn _rawCmdMacro(cmd: str, storage: str): $int native "rawCmdMacro";
+
+let $nextFree = 0;
+let freeLocs = new ArrayList_rint();
+
+let malocStorage = new Storage();
+let tempStorage = new Storage();
+
+/// Returns a raw pointer to the memory
+fn mallocInternal() {
+	let $pointer = 0;
+	if (freeLocs.isEmpty()) {
+		$pointer = $nextFree;
+		$nextFree += 1;
+	} else {
+		$pointer = freeLocs.getFirst();
+		freeLocs.removeFirst();
+	}
+	return $pointer;
+}
+
+/// Free's a raw memory pointer
+fn freeInternal($pointer: $int) {
+	if ($nextFree == ($pointer + 1)) {
+		$nextFree -= 1;
+	} else {
+		freeLocs.push($pointer);
+	}
+}
+
+pub fn malloc() {
+	let $pointer = mallocInternal();
+	let ref = new $MemoryRef(malocStorage, $pointer);
+	return ref;
+}
+
+class $MemoryRef {
+	storage: Storage;
+	$pointer: $int;
+
+	pub $MemoryRef(storage: Storage, pointer: $int) {
+		this.storage = storage;
+		this.$pointer = pointer;
+	}
+
+	pub fn free() {
+		tempStorage.putInt("pointer", this.$pointer);
+		_rawCmdMacro("data modify storage " + this.storage.getName() + " c[$(pointer)] set value {}", tempStorage.getName());
+		tempStorage.remove("pointer");
+		freeInternal(this.$pointer);
+	}
+
+//	pub fn set(path: str, value: str) {
+//		return _rawCmd("data modify storage " + this.storageName + " " + path + " set value " + value);
+//	}
+}

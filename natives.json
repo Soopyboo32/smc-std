@@ -1,0 +1,28 @@
+{
+  "range": {
+    "file": "@std/range",
+    "path": "Range"
+  },
+  "StackTrace": {
+    "file": "@std/stack",
+    "path": "StackTrace"
+  },
+  "StackTraceElm": {
+    "file": "@std/stack",
+    "path": "StackTraceElm"
+  },
+  "ArrayList": {
+    "file": "@std/arraylist/comptime",
+    "path": "ArrayList"
+  },
+  "RetHolder": {
+    "file": "@std/retholder",
+    "path": "RetHolder"
+  },
+  "extensions": {
+    "str": {
+      "file": "@std/nativeExtensions/string",
+      "path": "String"
+    }
+  }
+}

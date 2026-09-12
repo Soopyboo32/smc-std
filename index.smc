@@ -1,0 +1,191 @@
+import {QUOTE} from "@std/quote";
+import {Range} from "@std/range";
+
+fn _toString(value: any): str native "toString";
+fn _log(text: str): null native "log";
+fn _debug(value: any): null native "debug";
+fn _rawCmd(cmd: str): $int native "rawCmd";
+fn _toRuntime(val: any): any native "toRuntime";
+fn _registerFunctionTag(tag: str, fun: fn): null native "registerFunctionTag";
+fn _getFunctionName(fun: fn): str native "getFunctionName";
+fn _executeAs(who: str, inner: fn): null native "executeAs";
+fn _executeAt(who: str, inner: fn): null native "executeAt";
+fn _executePositioned(x: str, y: str, z: str, inner: fn): null native "executePositioned";
+fn _executeIf(test: str, inner: fn): null native "executeIf";
+fn _getPackId(): str native "getPackId";
+
+pub fn say(msg: str) {
+	_rawCmd("say " + msg);
+}
+
+pub fn clear(player: str, item: str, count: int) {
+	return _rawCmd("clear " + player + " " + item + " " + count);
+}
+
+pub fn clearAll(player: str, item: str) {
+	return _rawCmd("clear " + player + " " + item);
+}
+
+pub fn give(player: str, item: str, count: int) {
+	_rawCmd("give " + player + " " + item + " " + count);
+}
+
+pub fn kill(entity: str) {
+	_rawCmd("kill " + entity);
+}
+
+pub fn gamemode(mode: str, entity: str) {
+	_rawCmd("gamemode " + mode + " " + entity);
+}
+
+pub fn tp(entity: str, x: str, y: str, z: str) {
+	_rawCmd("tp " + entity + " " + x + " " + y + " " + z);
+}
+
+pub fn setblock(x: str, y: str, z: str, block: str) {
+	_rawCmd("setblock " + x + " " + y + " " + z + " " + block);
+}
+
+pub fn setblockmode(x: str, y: str, z: str, block: str, mode: str) {
+	_rawCmd("setblock " + x + " " + y + " " + z + " " + block + " " + mode);
+}
+
+pub fn itemReplaceBlock(x: str, y: str, z: str, slot: str, item: str, count: int) {
+	_rawCmd("item replace block " + x + " " + y + " " + z + " " + slot + " with " + item + " " + count);
+}
+
+pub fn itemReplaceEntity(entity: str, slot: str, item: str, count: int) {
+	_rawCmd("item replace entity " + entity + " " + slot + " with " + item + " " + count);
+}
+
+pub fn itemReplaceEntityFromBlock(entity: str, entitySlot: str, x: str, y: str, z: str, blockSlot: str) {
+	_rawCmd("item replace entity " + entity + " " + entitySlot + " from block " + x + " " + y + " " + z + " " + blockSlot);
+}
+
+pub fn itemReplaceBlockFromEntity(x: str, y: str, z: str, blockSlot: str, entity: str, entitySlot: str) {
+	_rawCmd("item replace block " + x + " " + y + " " + z + blockSlot + " from entity " + entity + " " + entitySlot);
+}
+
+pub fn addTag(entity: str, tag: str) {
+	_rawCmd("tag " + entity + " add " + tag);
+}
+
+pub fn removeTag(entity: str, tag: str) {
+	_rawCmd("tag " + entity + " remove " + tag);
+}
+
+pub fn dataModifyBlockSetValueStr(x: str, y: str, z: str, path: str, value: str) {
+	_rawCmd("data modify block " + x + " " + y + " " + z + " " + path + " set value " + QUOTE + value + QUOTE);
+}
+
+pub fn dataGetEntity(entity: str, path: str) {
+	return _rawCmd("data get entity " + entity + " " + path);
+}
+
+pub fn dataGetBlock(x: str, y: str, z: str, path: str) {
+	return _rawCmd("data get block " + x + " " + y + " " + z + " " + path);
+}
+
+pub fn effectGive(player: str, effect: str, time: str, amplifier: int, hideParticles: bool) {
+	_rawCmd("effect give " + player + " " + effect + " " + time + " " + amplifier + " " + hideParticles);
+}
+
+pub fn particle(part: str, x: str, y: str, z: str, dx: str, dy: str, dz: str, speed: float, count: int, mode: str) {
+	_rawCmd("particle " + part + " " + x + " " + y + " " + z + " " + dx + " " + dy + " " + dz + " " + speed + " " + count + " " + mode);
+}
+
+pub fn onTick(cb: fn) {
+	_registerFunctionTag("minecraft:tick", cb);
+}
+
+pub fn getFunctionName(cb: fn): str {
+	return _getFunctionName(cb);
+}
+
+pub fn executeAsAt(as: str, inner: fn) {
+	executeAs(as) {
+		executeAt("@s") {
+			inner();
+		};
+	};
+}
+
+pub fn executeAs(entity: str, inner: fn) {
+	if (entity == "@s") {
+		inner();
+		return;
+	}
+	_executeAs(entity, inner);
+}
+
+pub fn executeAt(entity: str, inner: fn) {
+	_executeAt(entity, inner);
+}
+
+pub fn executePositioned(x: str, y: str, z: str, inner: fn) {
+	_executePositioned(x, y, z, inner);
+}
+
+pub fn executeIf(test: str, inner: fn) {
+	_executeIf(test, inner);
+}
+
+pub fn getItemsInEntitySlot(entity: str, slot: str) {
+	return _rawCmd("execute if items entity " + entity + " " + slot + " *");
+}
+
+pub fn getItemsInBlockSlot(x: str, y: str, z: str, slot: str) {
+	return _rawCmd("execute if items block " + x + " " + y + " " + z + " " + slot + " *");
+}
+
+fn executeTest(test: str) {
+	let $ret = false;
+	_executeIf(test) {
+		$ret = true;
+	};
+	return $ret;
+}
+
+pub fn blockMatches(x: str, y: str, z: str, test: str) {
+	return executeTest("block " + x + " " + y + " " + z + " " + test);
+}
+
+pub fn entityExists(entity: str) {
+	return executeTest("entity " + entity);
+}
+
+pub fn itemEntityMatches(entity: str, slot: str, item: str) {
+	return executeTest("items entity " + entity + " " + slot + " " + item);
+}
+
+pub fn itemBlockMatches(x: str, y: str, z: str, slot: str, item: str) {
+	return executeTest("items block " + x + " " + y + " " + z + " " + slot + " " + item);
+}
+
+pub fn scoreMatches(entity: str, score: str, range: Range) {
+	return executeTest("score " + entity + " " + score + " matches " + range.toString());
+}
+
+pub fn revokeAdvancement(entity: str, advancement: str) {
+	_rawCmd("advancement revoke " + entity + " only " + advancement);
+}
+
+pub fn toRuntime(val: any) {
+	return _toRuntime(val);
+}
+
+pub fn getPackId() {
+	return _getPackId();
+}
+
+pub fn toString(value: any) {
+	return _toString(value);
+}
+
+pub fn log(value: str) {
+	_log(value);
+}
+
+pub fn debug(value: any) {
+	_debug(value);
+}

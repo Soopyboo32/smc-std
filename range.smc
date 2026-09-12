@@ -1,0 +1,92 @@
+import {panic} from "@std/panic";
+
+pub class Range {
+	start: int;
+	end: int;
+
+	pub Range(start: int, end: int) {
+		if (start > end) panic("RangeValue's max must be greater or equal to min");
+		this.start = start;
+		this.end = end;
+	}
+
+	pub fn toString() {
+		return this.start + ".." + this.end;
+	}
+
+	pub fn min() {
+		return this.start;
+	}
+
+	pub fn max() {
+		return this.end;
+	}
+
+	pub fn has(val: int) {
+		return (val >= this.start) && (val <= this.end);
+	}
+
+	pub fn iterator() {
+		return new RangeIterator(this.start, this.end);
+	}
+
+	pub fn reversedIterable() {
+		return new ReversedRangeIterable(this);
+	}
+}
+
+class RangeIterator {
+	nextI: int;
+	end: int;
+
+	pub RangeIterator(start: int, end: int) {
+		this.nextI = start;
+		this.end = end;
+	}
+
+	pub fn hasNext() {
+		return this.end >= this.nextI;
+	}
+
+	pub fn next() {
+		let ret = this.nextI;
+		this.nextI += 1;
+		return ret;
+	}
+}
+
+class ReversedRangeIterable {
+	r: Range;
+
+	pub ReversedRangeIterable(r: Range) {
+		this.r = r;
+	}
+
+	pub fn iterator() {
+		return new ReversedRangeIterator(this.r.min(), this.r.max());
+	}
+}
+
+class ReversedRangeIterator {
+	nextI: int;
+	start: int;
+
+	pub ReversedRangeIterator(start: int, end: int) {
+		this.nextI = end;
+		this.start = start;
+	}
+
+	pub fn hasNext() {
+		return this.start <= this.nextI;
+	}
+
+	pub fn next() {
+		let ret = this.nextI;
+		this.nextI -= 1;
+		return ret;
+	}
+}
+
+pub fn till(val: int) {
+	return new Range(0, val - 1);
+}

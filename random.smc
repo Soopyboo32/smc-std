@@ -1,0 +1,7 @@
+import {Range} from "@std/range";
+
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+pub fn random(range: Range) {
+	return _rawCmd("random value " + range.toString());
+}

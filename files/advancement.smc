@@ -1,0 +1,166 @@
+import {writeJsonToPack} from "@std/files/writejsonfile";
+import {getPackId, getFunctionName, revokeAdvancement} from "@std/index";
+import {NbtCompoundBuilder, NbtList, NbtListBuilder, Nbt} from "@std/nbt";
+import {ArrayList} from "@std/arraylist/comptime";
+import {Pair} from "@std/pair";
+import {_recipies} from "../../../kiwismp-recreation/items_storage";
+import {Optional} from "@std/optional";
+
+pub fn addAdvancement(name: str, builder: fn (builder: AdvancementBuilder)) {
+	writeJsonToPack("data/" + getPackId() + "/advancement/" + name + ".json", false, fn (nbtBuilder: NbtCompoundBuilder) {
+		let b = new AdvancementBuilder(nbtBuilder, name);
+		builder(b);
+		b.finish();
+	});
+}
+
+pub class AdvancementBuilder {
+	name: str;
+	builder: NbtCompoundBuilder;
+	criterias: ArrayList<Pair<str, fn (builder: CriteriaBuilder)>>;
+	_rewards: RewardsData;
+
+	pub AdvancementBuilder(builder: NbtCompoundBuilder, name: str) {
+		this.name = name;
+		this.builder = builder;
+		this.criterias = new ArrayList<Pair<str, fn (builder: CriteriaBuilder)>>();
+	}
+
+	pub fn getName() {
+		return this.name;
+	}
+
+	//TODO:
+	// - Display
+	// - Requirements
+
+	pub fn parent(parent: str) {
+		this.builder.string("parent", parent);
+	}
+
+	pub fn criteria(name: str, builder: fn (builder: CriteriaBuilder)) {
+		criterias.add(new Pair<str, fn (builder: CriteriaBuilder)>(name, builder));
+	}
+
+	pub fn rewards(builder: fn (builder: RewardsBuilder)) {
+		let data = new RewardsData();
+		builder(new RewardsBuilder(data, this));
+		this._rewards = data;
+	}
+
+	pub fn finish() {
+		if (!this.criterias.isEmpty()) {
+			this.builder.compound("criteria") {
+				for (let c in this.criterias) {
+					compound(c.getLeft(), fn (b: NbtCompoundBuilder) {
+						c.getRight()(new CriteriaBuilder(b));
+					});
+				}
+			};
+		}
+		this.builder.compound("rewards", fn (b: NbtCompoundBuilder) {
+			this._rewards.build(b);
+		});
+	}
+}
+
+pub class CriteriaBuilder {
+	builder: NbtCompoundBuilder;
+
+	pub CriteriaBuilder(builder: NbtCompoundBuilder) {
+		this.builder = builder;
+	}
+
+	pub fn trigger(value: str) {
+		this.builder.string("trigger", value);
+	}
+
+	pub fn condition(builder: fn (builder: NbtCompoundBuilder)) {
+		this.builder.compound("conditions", builder);
+	}
+}
+
+class RewardsData {
+	_experience: Optional<int>;
+	_loot: Optional<NbtList>;
+	_recipies: Optional<NbtList>;
+	_function: Optional<str>;
+
+	pub RewardsData() {
+		this._experience = Optional.empty<int>();
+		this._loot = Optional.empty<NbtList>();
+		this._recipies = Optional.empty<NbtList>();
+		this._function = Optional.empty<str>();
+	}
+
+	pub fn setExperience(value: int) {
+		this._experience = Optional.of<int>(value);
+	}
+
+	pub fn setLoot(value: NbtList) {
+		this._loot = Optional.of<NbtList>(value);
+	}
+
+	pub fn setRecipies(value: NbtList) {
+		this._recipies = Optional.of<NbtList>(value);
+	}
+
+	pub fn setFunction(value: str) {
+		this._function = Optional.of<str>(value);
+	}
+
+	pub fn build(b: NbtCompoundBuilder) {
+		this._experience.ifPresent {
+			b.i32("experience", this._experience.get());
+		};
+		this._loot.ifPresent {
+			b.nbt("loot", this._loot.get());
+		};
+		this._recipies.ifPresent {
+			b.nbt("recipes", this._recipies.get());
+		};
+		this._function.ifPresent {
+			b.string("function", this._function.get());
+		};
+	}
+}
+
+pub class RewardsBuilder {
+	rewards: RewardsData;
+	advancement: AdvancementBuilder;
+
+	pub RewardsBuilder(rewards: RewardsData, advancement: AdvancementBuilder) {
+		this.rewards = rewards;
+		this.advancement = advancement;
+	}
+
+	pub fn experience(value: int) {
+		this.rewards.setExperience(value);
+	}
+
+	pub fn loot(builder: fn (b: NbtListBuilder)) {
+		this.rewards.setLoot(Nbt.list(builder));
+	}
+
+	pub fn recipes(builder: fn (b: NbtListBuilder)) {
+		this.rewards.setRecipies(Nbt.list(builder));
+	}
+
+	pub fn function(value: fn (extraMethods: ExtraFunctionMethods)) {
+		this.rewards.setFunction(getFunctionName {
+			value(new ExtraFunctionMethods(advancement));
+		});
+	}
+}
+
+pub class ExtraFunctionMethods {
+	advancement: AdvancementBuilder;
+
+	pub ExtraFunctionMethods(advancement: AdvancementBuilder) {
+		this.advancement = advancement;
+	}
+
+	pub fn revoke(entity: str) {
+		revokeAdvancement(entity, getPackId() + ":" + this.advancement.getName());
+	}
+}

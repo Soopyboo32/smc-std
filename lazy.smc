@@ -1,0 +1,15 @@
+import {Optional} from "@std/optional";
+
+pub fn lazy<T>(fun: fn: T) {
+	let cache = Optional.empty<T>();
+
+	return fn () {
+		if (cache.isPresent()) {
+			return cache.get();
+		} else {
+			let res = fun();
+			cache.set(res);
+			return res;
+		}
+	};
+}

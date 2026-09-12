@@ -1,0 +1,10 @@
+import {EmptyIterator} from "@std/emptyIterator";
+
+pub class EmptyIterable {
+	pub EmptyIterable() {
+	}
+
+	pub fn iterator() {
+		return new EmptyIterator();
+	}
+}

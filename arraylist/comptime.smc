@@ -1,0 +1,100 @@
+import {panic} from "@std/panic";
+fn _makeArrayList(): native native "makeArrayList";
+fn _getArrayLen(array: native): int native "getArrayLen";
+fn _arrayGet(array: native, index: int): any native "arrayGet";
+fn _arraySet(array: native, index: int, value: any): null native "arraySet";
+fn _arrayPush(array: native, value: any): null native "arrayPush";
+fn _arrayRemove(array: native, index: int): null native "arrayRemove";
+fn _arrayPop(array: native): any native "arrayPop";
+
+pub class ArrayList<T> {
+	storage: native;
+
+	pub ArrayList() {
+		this.storage = _makeArrayList();
+	}
+
+	pub fn get(index: int): T {
+		if (index >= this.len()) {
+			panic("Index " + index + " is out of bounds of array len " + this.len());
+		}
+
+		return _arrayGet(this.storage, index);
+	}
+
+	pub fn push(value: T) {
+		_arrayPush(this.storage, value);
+	}
+
+	pub fn add(value: T) {
+		this.push(value);
+	}
+
+	pub fn addAll(other: ArrayList<T>) {
+		for (let value in other) {
+			this.push(value);
+		}
+	}
+
+	pub fn remove(index: int) {
+		_arrayRemove(this.storage, index);
+	}
+
+	pub fn last() {
+		return this.get(this.len() - 1);
+	}
+
+	pub fn pop(): T {
+		return _arrayPop(this.storage);
+	}
+
+	pub fn len() {
+		return _getArrayLen(this.storage);
+	}
+
+	pub fn isEmpty() {
+		return this.len() == 0;
+	}
+
+	pub fn iterator() {
+		return new ArrayListIterator<T>(this);
+	}
+
+	pub fn filter(inner: fn (val: T): bool) {
+		let result = new ArrayList<T>();
+		for (let elm in this) {
+			if (inner(elm)) {
+				result.add(elm);
+			}
+		}
+		return result;
+	}
+
+	pub fn map<V>(inner: fn (val: T): V) {
+		let result = new ArrayList<V>();
+		for (let elm in this) {
+			result.add(inner(elm));
+		}
+		return result;
+	}
+}
+
+class ArrayListIterator<T> {
+	list: ArrayList<T>;
+	nextIndex: int;
+
+	pub ArrayListIterator(list: ArrayList<T>) {
+		this.list = list;
+		this.nextIndex = 0;
+	}
+
+	pub fn hasNext() {
+		return this.nextIndex < this.list.len();
+	}
+
+	pub fn next() {
+		let value = this.list.get(this.nextIndex);
+		this.nextIndex += 1;
+		return value;
+	}
+}

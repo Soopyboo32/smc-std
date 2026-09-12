@@ -1,0 +1,11 @@
+import {onTick} from "@std/index";
+
+let $ticksRunning = 0;
+
+onTick {
+	$ticksRunning += 1;
+};
+
+pub fn getTicksRunning() {
+	return $ticksRunning;
+}

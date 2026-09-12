@@ -1,0 +1,56 @@
+import {getTmpVariable} from "@std/scoreboard";
+import {NbtCompoundBuilder, Nbt} from "@std/nbt";
+
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+let tmpVar = getTmpVariable();
+
+pub fn itemModifyEntity(entity: str, entitySlot: str, modifier: str) {
+	_rawCmd("item modify entity " + entity + " " + entitySlot + " " + modifier);
+}
+
+pub fn itemModifyEntityJson(entity: str, entitySlot: str, modifierBuilder: fn (builder: NbtCompoundBuilder)) {
+	let json = Nbt.compound(modifierBuilder);
+	itemModifyEntity(entity, entitySlot, json.toJsonStr());
+}
+
+pub fn itemModifyEntitySetCountRint(entity: str, entitySlot: str, $count: $int) {
+	tmpVar.set($count);
+
+	itemModifyEntityJson(entity, entitySlot) {
+		string("function", "minecraft:set_count");
+		compound("count") {
+			string("type", "score");
+			compound("target") {
+				string("type", "fixed");
+				string("name", tmpVar.getName());
+			};
+			string("score", tmpVar.getObjective().getName());
+		};
+	};
+}
+
+pub fn itemModifyBlock(x: str, y: str, z: str, blockSlot: str, modifier: str) {
+	_rawCmd("item modify block " + x + " " + y + " " + z + " " + blockSlot + " " + modifier);
+}
+
+pub fn itemModifyBlockJson(x: str, y: str, z: str, blockSlot: str, modifierBuilder: fn (builder: NbtCompoundBuilder)) {
+	let json = Nbt.compound(modifierBuilder);
+	itemModifyBlock(x, y, z, blockSlot, json.toJsonStr());
+}
+
+pub fn itemModifyBlockSetCountRint(x: str, y: str, z: str, blockSlot: str, $count: $int) {
+	tmpVar.set($count);
+
+	itemModifyBlockJson(x, y, z, blockSlot) {
+		string("function", "minecraft:set_count");
+		compound("count") {
+			string("type", "score");
+			compound("target") {
+				string("type", "fixed");
+				string("name", tmpVar.getName());
+			};
+			string("score", tmpVar.getObjective().getName());
+		};
+	};
+}

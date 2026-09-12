@@ -1,0 +1,10 @@
+fn _allowUnsafeWrites(inner: fn): null native "allowUnsafeWrites";
+
+let i = 0;
+pub fn makeUniqueTag() {
+	let iv = i;
+	_allowUnsafeWrites {
+		i += 1;
+	};
+	return "uniquetag-" + i;
+}

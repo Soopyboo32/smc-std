@@ -1,0 +1,8 @@
+import {NbtCompoundBuilder, Nbt} from "@std/nbt";
+import {writeToPack} from "@std/files/writefile";
+
+pub fn writeJsonToPack(file: str, overwrite: bool, jsonBuilder: fn (builder: NbtCompoundBuilder)) {
+	let json = Nbt.compound(jsonBuilder);
+	let string = json.toJsonStr();
+	writeToPack(file, string, overwrite);
+}

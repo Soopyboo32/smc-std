@@ -1,0 +1,37 @@
+import {getPackId} from "@std/index";
+import {getTmpVariable} from "@std/scoreboard";
+
+fn _rawCmd(cmd: str): $int native "rawCmd";
+
+let tmpVar = getTmpVariable();
+let storageIndex = 0;
+
+pub class Storage {
+	storageName: str;
+
+	pub Storage() {
+		this.storageName = getPackId() + ":_" + storageIndex;
+		storageIndex += 1;
+	}
+
+	pub fn set(path: str, value: str) {
+		return _rawCmd("data modify storage " + this.storageName + " " + path + " set value " + value);
+	}
+
+	pub fn getName() {
+		return this.storageName;
+	}
+
+	pub fn getInt(path: str) {
+		return _rawCmd("data get storage " + this.storageName + " " + path);
+	}
+
+	pub fn putInt(path: str, value: $int) {
+		tmpVar.set(value);
+		_rawCmd("execute store result storage " + this.storageName + " " + path + " int 1 run scoreboard players get " + tmpVar.reference());
+	}
+
+	pub fn remove(path: str) {
+		_rawCmd("data remove storage " + this.storageName + " " + path);
+	}
+}

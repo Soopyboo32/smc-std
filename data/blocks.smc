@@ -1,0 +1,15 @@
+pub let BLOCK_DISPLAY = "minecraft:block_display";
+pub let TEST_BLOCK = "minecraft:test_block";
+pub let CRAFTING_TABLE = "minecraft:crafting_table";
+pub let TARGET = "minecraft:target";
+pub let STONE = "minecraft:stone";
+pub let OAK_BUTTON = "minecraft:oak_button";
+pub let STONE_BUTTON = "minecraft:stone_button";
+pub let BARREL = "minecraft:barrel";
+pub let DIAMOND_BLOCK = "minecraft:diamond_block";
+pub let GRAY_STAINED_GLASS_PANE = "minecraft:gray_stained_glass_pane";
+pub let LIGHT_GRAY_STAINED_GLASS_PANE = "minecraft:light_gray_stained_glass_pane";
+pub let BARRIER = "minecraft:barrier";
+pub let AIR = "minecraft:air";
+pub let COMMAND_BLOCK = "minecraft:command_block";
+pub let MAGENTA_GLAZED_TERRACOTTA = "minecraft:magenta_glazed_terracotta";

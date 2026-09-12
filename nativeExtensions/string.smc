@@ -1,0 +1,19 @@
+fn _charAt(string: str, index: int): str native "charAt";
+
+pub class String {
+	static pub fn charAt(self: str, index: int) {
+		return _charAt(self, index);
+	}
+
+	static pub fn append(self: str, other: str) {
+		return self + other;
+	}
+
+	static pub fn len(self: str) {
+		let len = 0;
+		for (let char in self) {
+			len += 1;
+		}
+		return len;
+	}
+}

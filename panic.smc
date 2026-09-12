@@ -1,0 +1,5 @@
+fn _panic(msg: str): null native "panic";
+
+pub fn panic(msg: str) {
+	_panic(msg);
+}
