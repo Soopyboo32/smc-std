@@ -3,7 +3,6 @@ import {getPackId, getFunctionName, revokeAdvancement} from "@std/index";
 import {NbtCompoundBuilder, NbtList, NbtListBuilder, Nbt} from "@std/nbt";
 import {ArrayList} from "@std/arraylist/comptime";
 import {Pair} from "@std/pair";
-import {_recipies} from "../../../kiwismp-recreation/items_storage";
 import {Optional} from "@std/optional";
 
 pub fn addAdvancement(name: str, builder: fn (builder: AdvancementBuilder)) {
