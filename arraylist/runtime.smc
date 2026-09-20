@@ -5,8 +5,6 @@ fn _rawCmd(cmd: str): $int native "rawCmd";
 
 let tempStorage = new Storage();
 
-//todo: generic type or smth?
-//not sure how to handle all the diff varients
 pub class ArrayList_rint {
 	storage: Storage;
 	$length: $int;

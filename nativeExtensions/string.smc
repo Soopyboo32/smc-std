@@ -1,3 +1,5 @@
+import {panic} from "@std/panic";
+
 fn _charAt(string: str, index: int): str native "charAt";
 
 pub class String {
@@ -10,10 +12,10 @@ pub class String {
 	}
 
 	static pub fn len(self: str) {
-		let len = 0;
-		for (let char in self) {
-			len += 1;
-		}
-		return len;
+		panic("TODO: implement string.len()");
+	}
+
+	static pub fn iterator(self: str) {
+		panic("TODO: implement string.iterator()");
 	}
 }
