@@ -1,20 +1,21 @@
-import {Nbt, NbtCompoundBuilder} from "@std/nbt";
+import {Nbt, NbtCompoundBuilder} from "nbt";
+import {Entity} from "data/datatypes";
 
 fn _rawCmd(cmd: str): $int native "rawCmd";
 
-pub fn summon(entity: str) {
-	_rawCmd("summon " + entity);
+pub fn summon(entity: Entity) {
+	_rawCmd("summon " + entity.getId());
 }
 
-pub fn summonCoords(entity: str, x: str, y: str, z: str) {
-	_rawCmd("summon " + entity + " " + x + " " + y + " " + z);
+pub fn summonCoords(entity: Entity, x: str, y: str, z: str) {
+	_rawCmd("summon " + entity.getId() + " " + x + " " + y + " " + z);
 }
 
-pub fn summonNbt(entity: str, nbt: fn(builder: NbtCompoundBuilder)) {
+pub fn summonNbt(entity: Entity, nbt: fn(builder: NbtCompoundBuilder)) {
 	summonNbtCoords(entity, "~", "~", "~", nbt);
 }
 
-pub fn summonNbtCoords(entity: str, x: str, y: str, z: str, nbt: fn(builder: NbtCompoundBuilder)) {
+pub fn summonNbtCoords(entity: Entity, x: str, y: str, z: str, nbt: fn(builder: NbtCompoundBuilder)) {
 	let nbtC = Nbt.compound(nbt);
-	_rawCmd("summon " + entity + " " + x + " " + y + " " + z + " " + nbtC.toNbtStr());
+	_rawCmd("summon " + entity.getId() + " " + x + " " + y + " " + z + " " + nbtC.toNbtStr());
 }

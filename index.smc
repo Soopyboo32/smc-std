@@ -1,5 +1,5 @@
-import {QUOTE} from "@std/quote";
-import {Range} from "@std/range";
+import {QUOTE} from "quote";
+import {Range} from "range";
 
 fn _toString(value: any): str native "toString";
 fn _log(text: str): null native "log";
@@ -42,6 +42,7 @@ pub fn tp(entity: str, x: str, y: str, z: str) {
 	_rawCmd("tp " + entity + " " + x + " " + y + " " + z);
 }
 
+//TODO: support overloads or smth to pass either str or Block?, or maybe interface for block vs custom?
 pub fn setblock(x: str, y: str, z: str, block: str) {
 	_rawCmd("setblock " + x + " " + y + " " + z + " " + block);
 }

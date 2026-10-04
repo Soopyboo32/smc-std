@@ -1,1 +1,4 @@
-pub let BAT = "minecraft:bat";
+import {Entity} from "datatypes";
+
+pub let BAT = new Entity("minecraft:bat");
+pub let BLOCK_DISPLAY = new Entity("minecraft:block_display");

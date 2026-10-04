@@ -1,0 +1,39 @@
+pub class Item {
+	id: str;
+
+	pub Item(id: str) {
+		this.id = id;
+	}
+
+	pub fn getId() {
+		return this.id;
+	}
+}
+
+pub class Entity {
+	id: str;
+
+	pub Entity(id: str) {
+		this.id = id;
+	}
+
+	pub fn getId() {
+		return this.id;
+	}
+}
+
+pub class Block {
+	id: str;
+
+	pub Block(id: str) {
+		this.id = id;
+	}
+
+	pub fn getId() {
+		return this.id;
+	}
+
+	pub fn item() {
+		return new Item(this.id);
+	}
+}
