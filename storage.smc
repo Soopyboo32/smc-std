@@ -1,5 +1,5 @@
-import {getPackId} from "@std/index";
-import {getTmpVariable} from "@std/scoreboard";
+import {getPackId} from "index";
+import {getTmpVariable} from "scoreboard";
 
 fn _rawCmd(cmd: str): $int native "rawCmd";
 

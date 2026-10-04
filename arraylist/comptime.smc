@@ -1,4 +1,5 @@
-import {panic} from "@std/panic";
+import {panic} from "../panic";
+
 fn _makeArrayList(): native native "makeArrayList";
 fn _getArrayLen(array: native): int native "getArrayLen";
 fn _arrayGet(array: native, index: int): any native "arrayGet";

@@ -1,6 +1,6 @@
-import {ArrayList} from "@std/arraylist/comptime";
-import {Map} from "@std/map/comptime";
-import {QUOTE} from "@std/quote";
+import {ArrayList} from "arraylist/comptime";
+import {Map} from "map/comptime";
+import {QUOTE} from "quote";
 
 //TODO: interface
 pub class Nbt {

@@ -1,4 +1,4 @@
-import {panic} from "@std/panic";
+import {panic} from "../panic";
 
 fn _charAt(string: str, index: int): str native "charAt";
 

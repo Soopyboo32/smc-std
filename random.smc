@@ -1,4 +1,4 @@
-import {Range} from "@std/range";
+import {Range} from "range";
 
 fn _rawCmd(cmd: str): $int native "rawCmd";
 

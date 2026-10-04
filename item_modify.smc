@@ -1,5 +1,5 @@
-import {getTmpVariable} from "@std/scoreboard";
-import {NbtCompoundBuilder, Nbt} from "@std/nbt";
+import {getTmpVariable} from "scoreboard";
+import {NbtCompoundBuilder, Nbt} from "nbt";
 
 fn _rawCmd(cmd: str): $int native "rawCmd";
 

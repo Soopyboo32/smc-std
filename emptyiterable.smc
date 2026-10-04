@@ -1,4 +1,4 @@
-import {EmptyIterator} from "@std/emptyIterator";
+import {EmptyIterator} from "emptyIterator";
 
 pub class EmptyIterable {
 	pub EmptyIterable() {

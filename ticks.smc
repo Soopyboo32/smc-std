@@ -1,4 +1,4 @@
-import {onTick} from "@std/index";
+import {onTick} from "index";
 
 let $ticksRunning = 0;
 

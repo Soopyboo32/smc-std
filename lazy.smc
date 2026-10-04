@@ -1,4 +1,4 @@
-import {Optional} from "@std/optional";
+import {Optional} from "optional";
 
 pub fn lazy<T>(fun: fn: T) {
 	let cache = Optional.empty<T>();

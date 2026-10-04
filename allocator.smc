@@ -1,5 +1,5 @@
-import {Storage} from "@std/storage";
-import {ArrayList_rint} from "@std/arraylist/runtime";
+import {Storage} from "storage";
+import {ArrayList_rint} from "arraylist/runtime";
 
 fn _rawCmdMacro(cmd: str, storage: str): $int native "rawCmdMacro";
 

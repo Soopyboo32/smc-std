@@ -1,4 +1,4 @@
-import {panic} from "@std/panic";
+import {panic} from "panic";
 
 pub class EmptyIterator {
 	pub EmptyIterator() {

@@ -1,4 +1,4 @@
-import {Storage} from "@std/storage";
+import {Storage} from "../storage";
 
 fn _rawCmdMacro(cmd: str, storage: str): $int native "rawCmdMacro";
 fn _rawCmd(cmd: str): $int native "rawCmd";

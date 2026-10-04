@@ -1,5 +1,5 @@
-import {ScoreboardObjective} from "@std/scoreboard";
-import {onTick, executeAs} from "@std/index";
+import {ScoreboardObjective} from "scoreboard";
+import {onTick, executeAs} from "index";
 
 fn _rawCmd(cmd: str): $int native "rawCmd";
 

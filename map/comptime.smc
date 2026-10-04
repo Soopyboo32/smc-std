@@ -1,5 +1,5 @@
-import {ArrayList} from "@std/arraylist/comptime";
-import {Pair} from "@std/pair";
+import {ArrayList} from "../arraylist/comptime";
+import {Pair} from "../pair";
 
 //TODO: hash for perf?
 pub class Map<K, V> {

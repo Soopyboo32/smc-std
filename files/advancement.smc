@@ -1,9 +1,9 @@
-import {writeJsonToPack} from "@std/files/writejsonfile";
-import {getPackId, getFunctionName, revokeAdvancement} from "@std/index";
-import {NbtCompoundBuilder, NbtList, NbtListBuilder, Nbt} from "@std/nbt";
-import {ArrayList} from "@std/arraylist/comptime";
-import {Pair} from "@std/pair";
-import {Optional} from "@std/optional";
+import {writeJsonToPack} from "../files/writejsonfile";
+import {getPackId, getFunctionName, revokeAdvancement} from "../index";
+import {NbtCompoundBuilder, NbtList, NbtListBuilder, Nbt} from "../nbt";
+import {ArrayList} from "../arraylist/comptime";
+import {Pair} from "../pair";
+import {Optional} from "../optional";
 
 pub fn addAdvancement(name: str, builder: fn (builder: AdvancementBuilder)) {
 	writeJsonToPack("data/" + getPackId() + "/advancement/" + name + ".json", false, fn (nbtBuilder: NbtCompoundBuilder) {

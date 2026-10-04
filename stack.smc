@@ -1,6 +1,6 @@
-import {ArrayList} from "@std/arraylist/comptime";
-import {till} from "@std/range";
-import {log} from "@std/index";
+import {ArrayList} from "arraylist/comptime";
+import {till} from "range";
+import {log} from "index";
 
 fn _getStackTrace(): StackTrace native "getStackTrace";
 

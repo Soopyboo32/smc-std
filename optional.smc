@@ -1,5 +1,5 @@
-import {ArrayList} from "@std/arraylist/comptime";
-import {panic} from "@std/panic";
+import {ArrayList} from "arraylist/comptime";
+import {panic} from "panic";
 
 pub class Optional<T> {
 	list: ArrayList<T>;

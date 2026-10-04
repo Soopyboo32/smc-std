@@ -1,4 +1,4 @@
-import {Map} from "@std/map/comptime";
+import {Map} from "map/comptime";
 
 fn _allowUnsafeWrites(inner: fn): null native "allowUnsafeWrites";
 
